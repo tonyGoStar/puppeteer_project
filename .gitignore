@@ -1,3 +1,8 @@
+/dist
+/templates
+/node_modules
+/screenshots/*
+
 # http://www.gnu.org/software/automake
 
 Makefile.in
