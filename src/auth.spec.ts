@@ -4,9 +4,13 @@ import puppeteer from "puppeteer";
 (async () => {
     const browser = await puppeteer.launch({
         headless: false,
-        defaultViewport: null
-        // product: 'firefox'
+        defaultViewport: null,
+        // product: 'firefox',
+        args: [
+            '--no-sandbox'
+        ]
     });
+
     const page = await browser.newPage();
     await page.goto('https://www.saucedemo.com/')
     await page.waitForSelector('input[id="user-name"]')
@@ -16,9 +20,9 @@ import puppeteer from "puppeteer";
     await page.keyboard.type('secret_sauce')
     
     await page.keyboard.down('Enter')
-    const prices = await page.$$('data-test="inventory-item-price"')
-    console.log(prices)
-    browser.close()
-    
+    await page.waitForSelector('[data-test="inventory-item-price"]')
+    const prices = await page.$$eval('[data-test="inventory-item-price"]', els => els.map(el => parseFloat((el.innerHTML).replace(/[^0-9.-]+/g,"")))) //(els as HTMLElement)
 
+    console.log('[prices]: ', prices)
+    browser.close()
 })()
